@@ -1,0 +1,31 @@
+#main{
+    width: 512px;
+    height: 320px;
+   position: relative;
+   background-color: black;
+}
+body{
+    margin: 0;
+    border: 1px solid white;
+    display: flex;
+    flex-direction: column;
+    justify-content:flex-start;
+    align-items: center;
+    overflow: hidden;
+    height: 100vh;
+    background-color: aliceblue;
+}
+#pacman{
+  background-color: black;
+}
+h1{
+    text-align: center;
+    font-family: cursive;
+    font-weight: 600;
+    color: lightgray;
+}
+img{
+    margin: 0px;
+    display: inline-block;
+    vertical-align: middle;
+}
