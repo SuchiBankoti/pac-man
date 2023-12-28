@@ -1,7 +1,6 @@
 const main = document.getElementById('main');
 
 let arr = [
-    // 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1],
@@ -15,7 +14,6 @@ let arr = [
 ];
 
 let pacPosition = { x: 1, y: 1 };
-let ghostPosition = { x: 14, y: 8 };
 
 const images = {
     wall: new Image(),
@@ -96,47 +94,47 @@ async function handleMotion(key) {
 }
 
 
-async function ghostMotion() {
-    console.log(pacPosition)
 
-    let diffX = ghostPosition.x - pacPosition.x;
-    let diffY = ghostPosition.y - pacPosition.y;
-    let newX = ghostPosition.x;
-    let newY = ghostPosition.y;
-    if (diffX === 0 && diffY === 0) {
-        return
-    } else if (diffX !== 0 && diffY !== 0) {
-        if (Math.abs(diffY) < Math.abs(diffX)) {
-            if (diffY > 0) {
-                newY = newY - 1;
-            } else {
-                newY = newY + 1;
-            }
-        } else {
-            if (diffX > 0) {
-                newX = newX - 1;
-            } else {
-                newX = newX + 1;
-            }
-        }
-    } else if (diffX===0 && diffY) {
-        
-    }
-    
-    if (
-        newY >= 0 &&
-        newY < arr.length &&
-        newX >= 0 &&
-        newX < arr[0].length &&
-        arr[newY][newX] !== 1
-    ) {
-        ghostPosition = { ...ghostPosition, x: newX, y: newY };
-        await renderCanvas();
-    }
 
+let ghostPosition = { x: 5, y: 5 };
+let currentDirection = { x: 0, y: 1 };
+
+function moveGhost() {
+    const currentX = ghostPosition.x;
+    const currentY = ghostPosition.y;
+
+    const nextX = currentX + currentDirection.x;
+    const nextY = currentY + currentDirection.y;
+
+    if (isValidMove(nextX, nextY)) {
+        ghostPosition.x = nextX;
+        ghostPosition.y = nextY;
+    } else {
+        currentDirection = getRandomDirection();
+    }
+    renderCanvas()
 }
 
-setInterval(ghostMotion, 500);
+function isValidMove(x, y) {
+    return x >= 0 && x < arr[0].length && y >= 0 && y < arr.length && arr[y][x] !== 1;
+}
+
+function getRandomDirection() {
+    const directions = [
+        { x: 0, y: 1 },  // Down
+        { x: 0, y: -1 }, // Up
+        { x: 1, y: 0 },  // Right
+        { x: -1, y: 0 }   // Left
+    ];
+
+    const randomIndex = Math.floor(Math.random() * directions.length);
+    return directions[randomIndex];
+}
+
+
+setInterval(moveGhost, 300);
+
+
 
 function handleEvent(e) {
     handleMotion(e.key);
