@@ -122,7 +122,7 @@ async function gameOverCanvas() {
     main.appendChild(fragment);
 }
 
-async function handleMotion(key) {
+function handleMotion(key) {
     let newPosition = { ...pacPosition };
     switch (key) {
         case "ArrowDown":
@@ -147,8 +147,8 @@ async function handleMotion(key) {
         arr[newPosition.y][newPosition.x] !== 1
     ) {
         arr[pacPosition.y][pacPosition.x] = 3;
+
         pacPosition = newPosition;
-        await renderCanvas();
     }
 }
 
