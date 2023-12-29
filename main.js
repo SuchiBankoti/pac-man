@@ -34,7 +34,6 @@ let ghostHelper2Position = { x: 22, y: 13 }
 let ghostHelper2Direction={x:0,y:1}
 let intervalOut;
 
-
 const images = {
     wall: new Image(),
     yellowDot: new Image(),
@@ -88,9 +87,9 @@ async function renderCanvas() {
                 tile.src = images.wall.src;
             } else if (n === 0) {
                 tile.src = images.yellowDot.src;
-            } else {
+            } else{
                 tile.src = images.empty.src;
-            }
+            } 
             fragment.appendChild(tile);
         });
     });
@@ -151,11 +150,6 @@ function handleMotion(key) {
         pacPosition = newPosition;
     }
 }
-
-
-
-
-
 
 function moveGhost() {
     if ((ghostPosition.x === pacPosition.x && ghostPosition.y === pacPosition.y) ||
@@ -237,10 +231,50 @@ function startGame() {
 }
 
 function renderGameOver() {
-    gameOver.style.display="flex"
-    
+    gameOver.style.display = "flex";
+
+    setTimeout(() => {
+        restartGame();
+    }, 2000);
 }
 
+async function restartGame() {
+    arr=[
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1],
+        [1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1],
+        [1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1],
+        [1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1],
+        [1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1],
+        [1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1],
+        [1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1],
+        [1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    ]
+    pacPosition = { x: 1, y: 1 };
+    ghostPosition = { x: 5, y: 5 };
+    currentDirection = { x: 0, y: 1 };
+    ghostHelper1Position = { x: 14, y: 8 };
+    ghostHelper1Direction = { x: 0, y: 1 };
+    ghostHelper2Position = { x: 22, y: 13 };
+    ghostHelper2Direction = { x: 0, y: 1 };
+    intervalOut = null;
+    clock.textContent = "5";
+    start.style.display = "flex";
+    gameOver.style.display = "none";
+
+    if (intervalOut) {
+        clearInterval(intervalOut);
+    }
+    startGame();
+    renderCanvas();
+    
+}
 function handleEvent(e) {
     handleMotion(e.key);
     e.preventDefault();
