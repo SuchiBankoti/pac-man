@@ -70,7 +70,7 @@ function preloadImages() {
 async function renderCanvas() {
     await preloadImages();
 
-    const fragment = document.createDocumentFragment(); // Create a document fragment
+    const fragment = document.createDocumentFragment();
 
     arr.forEach((e, row) => {
         e.forEach((n, col) => {
@@ -99,6 +99,28 @@ async function renderCanvas() {
     main.appendChild(fragment);
 }
 
+async function gameOverCanvas() {
+    console.log('gameover canvas')
+    main.innerHTML = "";
+
+    await preloadImages();
+
+    const fragment = document.createDocumentFragment();
+
+    arr.forEach((e, row) => {
+        e.forEach((n, col) => {
+            const tile = document.createElement('img');
+             if (n === 1) {
+                tile.src = images.wall.src;
+            } else{
+                tile.src = images.empty.src;
+            } 
+            fragment.appendChild(tile);
+        });
+    });
+
+    main.appendChild(fragment);
+}
 
 async function handleMotion(key) {
     let newPosition = { ...pacPosition };
@@ -139,8 +161,10 @@ function moveGhost() {
     if ((ghostPosition.x === pacPosition.x && ghostPosition.y === pacPosition.y) ||
         (ghostHelper1Position.x === pacPosition.x && ghostHelper1Position.y === pacPosition.y) ||
     (ghostHelper2Position.x === pacPosition.x && ghostHelper2Position.y === pacPosition.y)) {
+        gameOverCanvas()
         clearInterval(intervalOut)
         renderGameOver()
+        return;
   }
     const currentX = ghostPosition.x;
     const currentY = ghostPosition.y;
@@ -213,7 +237,6 @@ function startGame() {
 }
 
 function renderGameOver() {
-    console.log('gameover')
     gameOver.style.display="flex"
     
 }
