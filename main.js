@@ -1,6 +1,7 @@
 const body=document.querySelector('body')
 const main = document.getElementById('main');
 const start = document.getElementById('start')
+const clock = document.getElementById('clock')
 const gameOver = document.createElement('div')
 gameOver.id = "gameover"
 gameOver.textContent="GAME-OVER"
@@ -13,7 +14,7 @@ let arr = [
     [1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
     [1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1],
     [1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1],
-    [1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1,0, 1],
+    [1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1],
@@ -27,8 +28,10 @@ let arr = [
 let pacPosition = { x: 1, y: 1 };
 let ghostPosition = { x: 5, y: 5 };
 let currentDirection = { x: 0, y: 1 };
-let ghostHelperPosition = { x: 14, y: 8 }
-let ghostHelperDirection={x:0,y:1}
+let ghostHelper1Position = { x: 14, y: 8 }
+let ghostHelper1Direction = { x: 0, y: 1 }
+let ghostHelper2Position = { x: 22, y: 13 }
+let ghostHelper2Direction={x:0,y:1}
 let intervalOut;
 
 
@@ -38,7 +41,8 @@ const images = {
     pac1: new Image(),
     empty: new Image(),
     ghost: new Image(),
-    ghostHelper:new Image()
+    ghostHelper1: new Image(),
+    ghostHelper2:new Image()
 };
 
 images.wall.src = "./images/wall.png";
@@ -46,7 +50,9 @@ images.yellowDot.src = "./images/yellowDot.png";
 images.pac1.src = "./images/pac1.png";
 images.empty.src = "./images/empty.png";
 images.ghost.src = "./images/ghost.png";
-images.ghostHelper.src="./images/scaredGhost.png"
+images.ghostHelper1.src = "./images/scaredGhost.png"
+images.ghostHelper2.src="./images/scaredGhost2.png"
+
 
 function preloadImages() {
     return Promise.all([
@@ -55,14 +61,17 @@ function preloadImages() {
         images.pac1.onload,
         images.empty.onload,
         images.ghost.onload,
-        images.ghostHelper.onload
+        images.ghostHelper1.onload,
+        images.ghostHelper2.onload
+
     ]);
 }
 
 async function renderCanvas() {
     await preloadImages();
 
-    main.innerHTML = "";
+    const fragment = document.createDocumentFragment(); // Create a document fragment
+
     arr.forEach((e, row) => {
         e.forEach((n, col) => {
             const tile = document.createElement('img');
@@ -71,20 +80,25 @@ async function renderCanvas() {
                 tile.id = "pacman";
             } else if (row === ghostPosition.y && col === ghostPosition.x) {
                 tile.src = images.ghost.src;
-            }else if (row === ghostHelperPosition.y && col === ghostHelperPosition.x) {
-                tile.src = images.ghostHelper.src;
-            }
-            else if (n === 1) {
+            } else if (row === ghostHelper1Position.y && col === ghostHelper1Position.x) {
+                tile.src = images.ghostHelper1.src;
+            } else if (row === ghostHelper2Position.y && col === ghostHelper2Position.x) {
+                tile.src = images.ghostHelper2.src;
+            } else if (n === 1) {
                 tile.src = images.wall.src;
             } else if (n === 0) {
                 tile.src = images.yellowDot.src;
             } else {
                 tile.src = images.empty.src;
             }
-            main.appendChild(tile);
+            fragment.appendChild(tile);
         });
     });
+
+    main.innerHTML = "";
+    main.appendChild(fragment);
 }
+
 
 async function handleMotion(key) {
     let newPosition = { ...pacPosition };
@@ -123,20 +137,25 @@ async function handleMotion(key) {
 
 function moveGhost() {
     if ((ghostPosition.x === pacPosition.x && ghostPosition.y === pacPosition.y) ||
-    (ghostHelperPosition.x===pacPosition.x && ghostHelperPosition.y===pacPosition.y)) {
+        (ghostHelper1Position.x === pacPosition.x && ghostHelper1Position.y === pacPosition.y) ||
+    (ghostHelper2Position.x === pacPosition.x && ghostHelper2Position.y === pacPosition.y)) {
         clearInterval(intervalOut)
         renderGameOver()
   }
     const currentX = ghostPosition.x;
     const currentY = ghostPosition.y;
-    const currentHelperX = ghostHelperPosition.x
-    const currentHelperY = ghostHelperPosition.y
+    const currentHelper1X = ghostHelper1Position.x
+    const currentHelper1Y = ghostHelper1Position.y
+    const currentHelper2X = ghostHelper2Position.x
+    const currentHelper2Y = ghostHelper2Position.y
     
 
     const nextX = currentX + currentDirection.x;
     const nextY = currentY + currentDirection.y;
-    const nextHelperX = currentHelperX + ghostHelperDirection.x
-    const nextHelperY = currentHelperY + ghostHelperDirection.y
+    const nextHelper1X = currentHelper1X + ghostHelper1Direction.x
+    const nextHelper1Y = currentHelper1Y + ghostHelper1Direction.y
+    const nextHelper2X = currentHelper2X + ghostHelper2Direction.x
+    const nextHelper2Y = currentHelper2Y + ghostHelper2Direction.y
     
 
     if (isValidMove(nextX, nextY)) {
@@ -146,11 +165,17 @@ function moveGhost() {
         currentDirection = getRandomDirection();
     }
 
-    if (isValidMove(nextHelperX, nextHelperY)) {
-        ghostHelperPosition.x = nextHelperX
-        ghostHelperPosition.y=nextHelperY
+    if (isValidMove(nextHelper1X, nextHelper1Y)) {
+        ghostHelper1Position.x = nextHelper1X
+        ghostHelper1Position.y=nextHelper1Y
     } else {
-        ghostHelperDirection=getRandomDirection()
+        ghostHelper1Direction=getRandomDirection()
+    }
+    if (isValidMove(nextHelper2X, nextHelper2Y)) {
+        ghostHelper2Position.x = nextHelper2X
+        ghostHelper2Position.y=nextHelper2Y
+    } else {
+        ghostHelper2Direction=getRandomDirection()
     }
     
     renderCanvas()
@@ -173,7 +198,18 @@ function getRandomDirection() {
 }
 
 function startGame() {
-    intervalOut=setInterval(moveGhost, 100);
+    let remainingTime = parseInt(clock.textContent, 10);
+
+    const interval = setInterval(() => {
+        remainingTime = remainingTime - 1;
+        clock.textContent = remainingTime;
+
+        if (remainingTime === 0) {
+            clearInterval(interval);
+            start.style.display = "none";
+            intervalOut = setInterval(moveGhost, 100);
+        }
+    }, 1000);
 }
 
 function renderGameOver() {
@@ -187,7 +223,6 @@ function handleEvent(e) {
     e.preventDefault();
 }
 
-
-start.addEventListener("click",startGame)
+startGame()
 window.addEventListener("keydown", handleEvent);
 renderCanvas();
