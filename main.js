@@ -1,20 +1,36 @@
 const body=document.querySelector('body')
 const main = document.getElementById('main');
+const start = document.getElementById('start')
+const gameOver = document.createElement('div')
+gameOver.id = "gameover"
+gameOver.textContent="GAME-OVER"
+body.appendChild(gameOver)
 
 let arr = [
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1],
-    [1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1],
-    [1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1],
-    [1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1],
-    [1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1],
+    [1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1],
+    [1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1,0, 1],
+    [1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1],
+    [1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
 
 let pacPosition = { x: 1, y: 1 };
+let ghostPosition = { x: 5, y: 5 };
+let currentDirection = { x: 0, y: 1 };
+let ghostHelperPosition = { x: 14, y: 8 }
+let ghostHelperDirection={x:0,y:1}
+let intervalOut;
+
 
 const images = {
     wall: new Image(),
@@ -22,6 +38,7 @@ const images = {
     pac1: new Image(),
     empty: new Image(),
     ghost: new Image(),
+    ghostHelper:new Image()
 };
 
 images.wall.src = "./images/wall.png";
@@ -29,6 +46,7 @@ images.yellowDot.src = "./images/yellowDot.png";
 images.pac1.src = "./images/pac1.png";
 images.empty.src = "./images/empty.png";
 images.ghost.src = "./images/ghost.png";
+images.ghostHelper.src="./images/scaredGhost.png"
 
 function preloadImages() {
     return Promise.all([
@@ -37,6 +55,7 @@ function preloadImages() {
         images.pac1.onload,
         images.empty.onload,
         images.ghost.onload,
+        images.ghostHelper.onload
     ]);
 }
 
@@ -52,7 +71,10 @@ async function renderCanvas() {
                 tile.id = "pacman";
             } else if (row === ghostPosition.y && col === ghostPosition.x) {
                 tile.src = images.ghost.src;
-            } else if (n === 1) {
+            }else if (row === ghostHelperPosition.y && col === ghostHelperPosition.x) {
+                tile.src = images.ghostHelper.src;
+            }
+            else if (n === 1) {
                 tile.src = images.wall.src;
             } else if (n === 0) {
                 tile.src = images.yellowDot.src;
@@ -97,26 +119,40 @@ async function handleMotion(key) {
 
 
 
-let ghostPosition = { x: 5, y: 5 };
-let currentDirection = { x: 0, y: 1 };
+
 
 function moveGhost() {
-    if (ghostPosition.x === pacPosition.x && ghostPosition.y === pacPosition.y) {
+    if ((ghostPosition.x === pacPosition.x && ghostPosition.y === pacPosition.y) ||
+    (ghostHelperPosition.x===pacPosition.x && ghostHelperPosition.y===pacPosition.y)) {
         clearInterval(intervalOut)
         renderGameOver()
   }
     const currentX = ghostPosition.x;
     const currentY = ghostPosition.y;
+    const currentHelperX = ghostHelperPosition.x
+    const currentHelperY = ghostHelperPosition.y
     
+
     const nextX = currentX + currentDirection.x;
     const nextY = currentY + currentDirection.y;
+    const nextHelperX = currentHelperX + ghostHelperDirection.x
+    const nextHelperY = currentHelperY + ghostHelperDirection.y
     
+
     if (isValidMove(nextX, nextY)) {
         ghostPosition.x = nextX;
         ghostPosition.y = nextY;
     } else {
         currentDirection = getRandomDirection();
     }
+
+    if (isValidMove(nextHelperX, nextHelperY)) {
+        ghostHelperPosition.x = nextHelperX
+        ghostHelperPosition.y=nextHelperY
+    } else {
+        ghostHelperDirection=getRandomDirection()
+    }
+    
     renderCanvas()
 }
 
@@ -136,23 +172,22 @@ function getRandomDirection() {
     return directions[randomIndex];
 }
 
-
-const intervalOut=setInterval(moveGhost, 100);
+function startGame() {
+    intervalOut=setInterval(moveGhost, 100);
+}
 
 function renderGameOver() {
     console.log('gameover')
-    const gameOver = document.createElement('div')
-    gameOver.id = "gameover"
-    gameOver.textContent="GAME-OVER"
-    body.appendChild(gameOver)
+    gameOver.style.display="flex"
     
 }
-
 
 function handleEvent(e) {
     handleMotion(e.key);
     e.preventDefault();
 }
 
+
+start.addEventListener("click",startGame)
 window.addEventListener("keydown", handleEvent);
 renderCanvas();
