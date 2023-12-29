@@ -33,11 +33,13 @@ let ghostHelper1Direction = { x: 0, y: 1 }
 let ghostHelper2Position = { x: 22, y: 13 }
 let ghostHelper2Direction={x:0,y:1}
 let intervalOut;
+let isMouthOpen=false
 
 const images = {
     wall: new Image(),
     yellowDot: new Image(),
     pac1: new Image(),
+    pac2:new Image(),
     empty: new Image(),
     ghost: new Image(),
     ghostHelper1: new Image(),
@@ -47,6 +49,8 @@ const images = {
 images.wall.src = "./images/wall.png";
 images.yellowDot.src = "./images/yellowDot.png";
 images.pac1.src = "./images/pac1.png";
+images.pac2.src = "./images/pac2.png";
+
 images.empty.src = "./images/empty.png";
 images.ghost.src = "./images/ghost.png";
 images.ghostHelper1.src = "./images/scaredGhost.png"
@@ -58,6 +62,7 @@ function preloadImages() {
         images.wall.onload,
         images.yellowDot.onload,
         images.pac1.onload,
+        images.pac2.onload,
         images.empty.onload,
         images.ghost.onload,
         images.ghostHelper1.onload,
@@ -75,7 +80,8 @@ async function renderCanvas() {
         e.forEach((n, col) => {
             const tile = document.createElement('img');
             if (row === pacPosition.y && col === pacPosition.x) {
-                tile.src = images.pac1.src;
+                isMouthOpen=!isMouthOpen
+                tile.src = isMouthOpen?images.pac2.src:images.pac1.src;
                 tile.id = "pacman";
             } else if (row === ghostPosition.y && col === ghostPosition.x) {
                 tile.src = images.ghost.src;
@@ -89,7 +95,7 @@ async function renderCanvas() {
                 tile.src = images.yellowDot.src;
             } else {
                 tile.src = images.empty.src;
-            } 
+            }
             fragment.appendChild(tile);
         });
     });
@@ -150,6 +156,11 @@ function handleMotion(key) {
         pacPosition = newPosition;
     }
 }
+
+
+
+
+
 
 function moveGhost() {
     if ((ghostPosition.x === pacPosition.x && ghostPosition.y === pacPosition.y) ||
@@ -225,56 +236,17 @@ function startGame() {
         if (remainingTime === 0) {
             clearInterval(interval);
             start.style.display = "none";
-            intervalOut = setInterval(moveGhost, 100);
+           renderCanvas();
+            intervalOut = setInterval(moveGhost, 300);
         }
     }, 1000);
 }
 
 function renderGameOver() {
-    gameOver.style.display = "flex";
-
-    setTimeout(() => {
-        restartGame();
-    }, 5000);
-}
-
-async function restartGame() {
-    arr=[
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1],
-        [1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-        [1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1],
-        [1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1],
-        [1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1],
-        [1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1],
-        [1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1],
-        [1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1],
-        [1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    ]
-    pacPosition = { x: 1, y: 1 };
-    ghostPosition = { x: 5, y: 5 };
-    currentDirection = { x: 0, y: 1 };
-    ghostHelper1Position = { x: 14, y: 8 };
-    ghostHelper1Direction = { x: 0, y: 1 };
-    ghostHelper2Position = { x: 22, y: 13 };
-    ghostHelper2Direction = { x: 0, y: 1 };
-    intervalOut = null;
-    clock.textContent = "5";
-    start.style.display = "flex";
-    gameOver.style.display = "none";
-
-    if (intervalOut) {
-        clearInterval(intervalOut);
-    }
-    startGame();
-    renderCanvas();
+    gameOver.style.display="flex"
     
 }
+
 function handleEvent(e) {
     handleMotion(e.key);
     e.preventDefault();
@@ -282,4 +254,4 @@ function handleEvent(e) {
 
 startGame()
 window.addEventListener("keydown", handleEvent);
-renderCanvas();
+gameOverCanvas()
