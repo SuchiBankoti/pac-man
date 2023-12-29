@@ -1,3 +1,4 @@
+const body=document.querySelector('body')
 const main = document.getElementById('main');
 
 let arr = [
@@ -100,12 +101,16 @@ let ghostPosition = { x: 5, y: 5 };
 let currentDirection = { x: 0, y: 1 };
 
 function moveGhost() {
+    if (ghostPosition.x === pacPosition.x && ghostPosition.y === pacPosition.y) {
+        clearInterval(intervalOut)
+        renderGameOver()
+  }
     const currentX = ghostPosition.x;
     const currentY = ghostPosition.y;
-
+    
     const nextX = currentX + currentDirection.x;
     const nextY = currentY + currentDirection.y;
-
+    
     if (isValidMove(nextX, nextY)) {
         ghostPosition.x = nextX;
         ghostPosition.y = nextY;
@@ -132,8 +137,16 @@ function getRandomDirection() {
 }
 
 
-setInterval(moveGhost, 300);
+const intervalOut=setInterval(moveGhost, 100);
 
+function renderGameOver() {
+    console.log('gameover')
+    const gameOver = document.createElement('div')
+    gameOver.id = "gameover"
+    gameOver.textContent="GAME-OVER"
+    body.appendChild(gameOver)
+    
+}
 
 
 function handleEvent(e) {

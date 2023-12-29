@@ -29,3 +29,20 @@ img{
     display: inline-block;
     vertical-align: middle;
 }
+#gameover{
+    position: fixed;
+    top: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 250px;
+    height: 250px;
+    background-color: white;
+    color: black;
+    font-family: cursive;
+    letter-spacing: 2px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
