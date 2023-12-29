@@ -87,7 +87,7 @@ async function renderCanvas() {
                 tile.src = images.wall.src;
             } else if (n === 0) {
                 tile.src = images.yellowDot.src;
-            } else{
+            } else {
                 tile.src = images.empty.src;
             } 
             fragment.appendChild(tile);
@@ -235,7 +235,7 @@ function renderGameOver() {
 
     setTimeout(() => {
         restartGame();
-    }, 2000);
+    }, 5000);
 }
 
 async function restartGame() {
