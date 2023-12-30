@@ -35,7 +35,7 @@ let ghostPosition = { x: 5, y: 5 };
 let currentDirection = { x: 0, y: 1 };
 let ghostHelper1Position = { x: 14, y: 8 }
 let ghostHelper1Direction = { x: 0, y: 1 }
-let ghostHelper2Position = { x: 14, y: 14 }
+let ghostHelper2Position = { x: 12, y: 14 }
 let ghostHelper2Direction={x:0,y:1}
 let intervalOut;
 let isMouthOpen = false

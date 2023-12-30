@@ -151,5 +151,15 @@ img{
 .tile{
     width: 22px;
     height: 22px;
-    object-fit:fill;
 }
+@media only screen and (max-width: 600px) {
+    .container{
+     padding: 2px;
+    }
+    #gameover{
+        font-size: 15px;
+    }
+    #start{
+        gap:5px;
+    }
+  }
