@@ -391,7 +391,7 @@ function removeIntro() {
     startGame()
 }
 gameOverCanvas()
-window.addEventListener("keydown", handleEvent);
+document.addEventListener("keydown", handleEvent);
 intro.addEventListener("click",removeIntro)
 
   
