@@ -27,8 +27,8 @@ let arr = [
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
-main.style.gridTemplateColumns = `repeat(16 ,22px)`
-main.style.gridTemplateRows=`repeat(16,22px)`
+main.style.gridTemplateColumns = `repeat(16 ,20px)`
+main.style.gridTemplateRows=`repeat(16,20px)`
 let pacPosition = { x: 1, y: 1 };
 let pacDirection="right"
 let ghostPosition = { x: 5, y: 5 };

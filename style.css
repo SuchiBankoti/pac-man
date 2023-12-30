@@ -50,6 +50,7 @@ h1{
     font-family: cursive;
     font-weight: 600;
     color: lightgray;
+    font-size: 20px;
 }
 img{
     margin: 0px;
@@ -131,8 +132,8 @@ img{
     
 }
 .topimg{
-    width: 25px;
-    height: 25px;
+    width: 20px;
+    height: 20px;
 }
 #score{
     color: white;
@@ -149,12 +150,14 @@ img{
 
 }
 .tile{
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
 }
 @media only screen and (max-width: 600px) {
     .container{
      padding: 2px;
+     padding-top: 55px;
+
     }
     #gameover{
         font-size: 15px;
