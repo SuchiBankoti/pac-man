@@ -3,7 +3,8 @@ const main = document.getElementById('main');
 const start = document.getElementById('start')
 const clock = document.getElementById('clock')
 const gameOver = document.createElement('div')
-const gameScore=document.getElementById('score')
+const gameScore = document.getElementById('score')
+const intro=document.getElementById('intro')
 gameOver.id = "gameover"
 gameOver.textContent="GAME-OVER"
 body.appendChild(gameOver)
@@ -36,11 +37,14 @@ let ghostHelper2Position = { x: 22, y: 13 }
 let ghostHelper2Direction={x:0,y:1}
 let intervalOut;
 let isMouthOpen = false
-let score=0
+let score = 0
+let gameStarted=false
 const keyAudio = new Audio('http://commondatastorage.googleapis.com/codeskulptor-demos/pyman_assets/eatpellet.ogg');
 const overAudio = new Audio('http://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/bonus.wav');
-const startAudio=new Audio('http://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3')
-
+const startAudio=new Audio('http://codeskulptor-demos.commondatastorage.googleapis.com/pang/paza-moduless.mp3')
+keyAudio.load();
+overAudio.load();
+startAudio.load();
     
 const images = {
     wall: new Image(),
@@ -144,6 +148,7 @@ async function renderCanvas() {
             
             } else if (row === ghostPosition.y && col === ghostPosition.x) {
                 tile.src = images.ghost.src;
+                
             } else if (row === ghostHelper1Position.y && col === ghostHelper1Position.x) {
                 tile.src = images.ghostHelper1.src;
             } else if (row === ghostHelper2Position.y && col === ghostHelper2Position.x) {
@@ -187,51 +192,52 @@ async function gameOverCanvas() {
 }
 
 function handleMotion(key) {
-    keyAudio.currentTime = 0
-    keyAudio.play()
+    if (gameStarted) {
+        
+       playOnkey()
 
-    let newPosition = { ...pacPosition };
-    switch (key) {
-        case "ArrowDown":
-            newPosition.y = newPosition.y + 1;
-            pacDirection = "down"
-            break;
-        case "ArrowUp":
-            newPosition.y = newPosition.y - 1;
-            pacDirection = "up"
-            break;
-        case "ArrowLeft":
-            newPosition.x = newPosition.x - 1;
-            pacDirection = "left"
-            break;
-        case "ArrowRight":
-            newPosition.x = newPosition.x + 1;
-            pacDirection="right"
-            break;
-    }
-    if (
-        newPosition.y >= 0 &&
-        newPosition.y < arr.length &&
-        newPosition.x >= 0 &&
-        newPosition.x < arr[0].length &&
-        arr[newPosition.y][newPosition.x] !== 1
-    ) {
-        if (arr[newPosition.y][newPosition.x] === 0) {
-            score = score + 1
-            gameScore.textContent=score
+        let newPosition = { ...pacPosition };
+        switch (key) {
+            case "ArrowDown":
+                newPosition.y = newPosition.y + 1;
+                pacDirection = "down"
+                break;
+            case "ArrowUp":
+                newPosition.y = newPosition.y - 1;
+                pacDirection = "up"
+                break;
+            case "ArrowLeft":
+                newPosition.x = newPosition.x - 1;
+                pacDirection = "left"
+                break;
+            case "ArrowRight":
+                newPosition.x = newPosition.x + 1;
+                pacDirection = "right"
+                break;
         }
-        if ((newPosition.y === ghostPosition.y && newPosition.x === ghostPosition.x) ||
-            (newPosition.y === ghostHelper1Position.y && newPosition.x === ghostHelper1Position.x) ||
-            (newPosition.y === ghostHelper2Position.y && newPosition.x === ghostHelper2Position.x)) {
-                overAudio.currentTime = 0
-                overAudio.play()
+        if (
+            newPosition.y >= 0 &&
+            newPosition.y < arr.length &&
+            newPosition.x >= 0 &&
+            newPosition.x < arr[0].length &&
+            arr[newPosition.y][newPosition.x] !== 1
+        ) {
+            if (arr[newPosition.y][newPosition.x] === 0) {
+                score = score + 1
+                gameScore.textContent = score
+            }
+            if ((newPosition.y === ghostPosition.y && newPosition.x === ghostPosition.x) ||
+                (newPosition.y === ghostHelper1Position.y && newPosition.x === ghostHelper1Position.x) ||
+                (newPosition.y === ghostHelper2Position.y && newPosition.x === ghostHelper2Position.x)) {
+               playOnGameOver()
                 gameOverCanvas()
                 clearInterval(intervalOut)
                 renderGameOver()
                 return;
             }
-        arr[pacPosition.y][pacPosition.x] =3;
-        pacPosition = newPosition;
+            arr[pacPosition.y][pacPosition.x] = 3;
+            pacPosition = newPosition;
+        }
     }
 }
 
@@ -245,8 +251,7 @@ function moveGhost() {
         (ghostHelper1Position.x === pacPosition.x && ghostHelper1Position.y === pacPosition.y) ||
         (ghostHelper2Position.x === pacPosition.x && ghostHelper2Position.y === pacPosition.y) ||
         score === 183) {
-        overAudio.currentTime = 0
-        overAudio.play()
+      playOnGameOver()
         gameOverCanvas()
         clearInterval(intervalOut)
         renderGameOver()
@@ -308,15 +313,16 @@ function getRandomDirection() {
 }
 
 function startGame() {
-    startAudio.currentTime = 0;
-    startAudio.play();
+     playOnStart()
     let remainingTime = parseInt(clock.textContent, 10);
-
+      
+   
     const interval = setInterval(() => {
         remainingTime = remainingTime - 1;
         clock.textContent = remainingTime;
 
         if (remainingTime === 0) {
+            gameStarted=true
             clearInterval(interval);
             start.style.display = "none";
             renderCanvas();
@@ -328,6 +334,7 @@ function startGame() {
 
 function renderGameOver() {
     gameOver.style.display = "flex"
+    gameStarted=false
     setTimeout(() => {
         resetGame()
     }, 2000);
@@ -363,9 +370,24 @@ function handleEvent(e) {
     handleMotion(e.key);
     e.preventDefault();
 }
-
-startGame()
+function playOnkey() {
+    keyAudio.currentTime = 0
+    keyAudio.play()
+}
+function playOnGameOver() {
+    overAudio.currentTime = 0
+    overAudio.play()
+}
+function playOnStart() {
+    startAudio.currentTime = 0
+    startAudio.play()
+}
+function removeIntro() {
+    intro.style.display = 'none'
+    startGame()
+}
 gameOverCanvas()
 window.addEventListener("keydown", handleEvent);
+intro.addEventListener("click",removeIntro)
 
   
