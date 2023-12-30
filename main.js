@@ -40,7 +40,9 @@ let ghostHelper2Direction={x:0,y:1}
 let intervalOut;
 let isMouthOpen = false
 let score = 0
-let gameStarted=false
+let gameStarted = false
+let touchStartX = null;
+let touchStartY = null;
 const keyAudio = new Audio('http://commondatastorage.googleapis.com/codeskulptor-demos/pyman_assets/eatpellet.ogg');
 const overAudio = new Audio('http://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/bonus.wav');
 const startAudio=new Audio('http://codeskulptor-demos.commondatastorage.googleapis.com/pang/paza-moduless.mp3')
@@ -374,6 +376,40 @@ function handleEvent(e) {
     handleMotion(e.key);
     e.preventDefault();
 }
+function handleTouchStart(event) {
+    touchStartX = event.touches[0].clientX;
+    touchStartY = event.touches[0].clientY;
+}
+function handleTouchMove(event) {
+    if (!touchStartX || !touchStartY) {
+        return;
+    }
+
+    let touchEndX = event.touches[0].clientX;
+    let touchEndY = event.touches[0].clientY;
+
+    let deltaX = touchEndX - touchStartX;
+    let deltaY = touchEndY - touchStartY;
+
+    touchStartX = null;
+    touchStartY = null;
+
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        if (deltaX > 0) {
+            handleMotion("ArrowRight");
+        } else {
+            handleMotion("ArrowLeft");
+        }
+    } else {
+        if (deltaY > 0) {
+            handleMotion("ArrowDown");
+        } else {
+            handleMotion("ArrowUp");
+        }
+    }
+
+    event.preventDefault();
+}
 function playOnkey() {
     keyAudio.currentTime = 0
     keyAudio.play()
@@ -392,6 +428,8 @@ function removeIntro() {
 }
 gameOverCanvas()
 document.addEventListener("keydown", handleEvent);
-intro.addEventListener("click",removeIntro)
+intro.addEventListener("click", removeIntro)
+document.addEventListener('touchstart', handleTouchStart, false);
+document.addEventListener('touchmove', handleTouchMove, false);
 
   
