@@ -26,6 +26,7 @@ let arr = [
 ];
 
 let pacPosition = { x: 1, y: 1 };
+let pacDirection="right"
 let ghostPosition = { x: 5, y: 5 };
 let currentDirection = { x: 0, y: 1 };
 let ghostHelper1Position = { x: 14, y: 8 }
@@ -38,8 +39,14 @@ let isMouthOpen=false
 const images = {
     wall: new Image(),
     yellowDot: new Image(),
-    pac1: new Image(),
-    pac2:new Image(),
+    pac1right: new Image(),
+    pac2right: new Image(),
+    pac1left: new Image(),
+    pac2left: new Image(),
+    pac1up: new Image(),
+    pac2up: new Image(),
+    pac1down: new Image(),
+    pac2down:new Image(),
     empty: new Image(),
     ghost: new Image(),
     ghostHelper1: new Image(),
@@ -48,8 +55,16 @@ const images = {
 
 images.wall.src = "./images/wall.png";
 images.yellowDot.src = "./images/yellowDot.png";
-images.pac1.src = "./images/pac1.png";
-images.pac2.src = "./images/pac2.png";
+images.pac1right.src = "./images/pac1right.png";
+images.pac2right.src = "./images/pac2right.png";
+images.pac1left.src = "./images/pac1left.png";
+images.pac2left.src = "./images/pac2left.png";
+
+images.pac1up.src = "./images/pac1up.png";
+images.pac2up.src = "./images/pac2up.png";
+images.pac1down.src = "./images/pac1down.png";
+images.pac2down.src = "./images/pac2down.png";
+
 
 images.empty.src = "./images/empty.png";
 images.ghost.src = "./images/ghost.png";
@@ -61,8 +76,14 @@ function preloadImages() {
     return Promise.all([
         images.wall.onload,
         images.yellowDot.onload,
-        images.pac1.onload,
-        images.pac2.onload,
+        images.pac1right.onload,
+        images.pac2right.onload,
+        images.pac1left.onload,
+        images.pac2left.onload,
+        images.pac1up.onload,
+        images.pac2up.onload,
+        images.pac1down.onload,
+        images.pac2down.onload,
         images.empty.onload,
         images.ghost.onload,
         images.ghostHelper1.onload,
@@ -80,9 +101,34 @@ async function renderCanvas() {
         e.forEach((n, col) => {
             const tile = document.createElement('img');
             if (row === pacPosition.y && col === pacPosition.x) {
-                isMouthOpen=!isMouthOpen
-                tile.src = isMouthOpen?images.pac2.src:images.pac1.src;
+                console.log(pacDirection)
+                isMouthOpen = !isMouthOpen
+                if (isMouthOpen) {
+                    switch (pacDirection) {
+                        case "right":
+                            tile.src = images.pac2right.src
+                            case "left":
+                            tile.src = images.pac2left.src
+                            case "up":
+                            tile.src = images.pac2up.src
+                            case "down":
+                                tile.src=images.pac2down.src
+                    }
+                    
+                } else {
+                    switch (pacDirection) {
+                        case "right":
+                            tile.src = images.pac1right.src
+                            case "left":
+                            tile.src = images.pac1left.src
+                            case "up":
+                            tile.src = images.pac1up.src
+                            case "down":
+                                tile.src=images.pac1down.src
+                    }
+                }
                 tile.id = "pacman";
+            
             } else if (row === ghostPosition.y && col === ghostPosition.x) {
                 tile.src = images.ghost.src;
             } else if (row === ghostHelper1Position.y && col === ghostHelper1Position.x) {
@@ -132,15 +178,19 @@ function handleMotion(key) {
     switch (key) {
         case "ArrowDown":
             newPosition.y = newPosition.y + 1;
+            pacDirection="down"
             break;
         case "ArrowUp":
             newPosition.y = newPosition.y - 1;
+            pacDirection="up"
             break;
         case "ArrowLeft":
             newPosition.x = newPosition.x - 1;
+            pacDirection="left"
             break;
         case "ArrowRight":
             newPosition.x = newPosition.x + 1;
+            pacDirection="right"
             break;
     }
 
