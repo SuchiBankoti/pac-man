@@ -7,7 +7,6 @@
    <link href="style.css" rel="stylesheet"></link>
 </head>
 <body>
-    <h1>Pac-man</h1>
     <div id="start">
      <div id="timer">
         <div id="clock">5</div>
@@ -20,7 +19,23 @@
      <img src="./images/scaredGhost.png"/>
      <img src="./images/scaredGhost2.png"/>
     </div>
-    <div id="main">
+    <div class="container">
+        <div class="life">
+            <div class="scorebox">
+                <img src="./images/pac1right.png" class="topimg" id="toppac"/>
+                <div id="score">0</div>
+            </div>
+            <div>
+                <h1>Pac-man</h1>
+            </div>
+          <div>
+            <img src="./images/ghost.png"  class="topimg"/>
+          <img src="./images/scaredGhost.png"  class="topimg"/>
+            <img src="./images/scaredGhost2.png"  class="topimg"/>
+          </div>
+        </div>
+        <div id="main">
+        </div>
     </div>
     <script  src="main.js"></script>
 </body>
