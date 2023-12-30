@@ -105,7 +105,7 @@ img{
 }
 #clock{
     position: absolute;
-    top: 20%;
+    top: 32%;
     left:50%;
     z-index: 3;
     transform: translateX(-50%);
