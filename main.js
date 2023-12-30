@@ -101,30 +101,37 @@ async function renderCanvas() {
         e.forEach((n, col) => {
             const tile = document.createElement('img');
             if (row === pacPosition.y && col === pacPosition.x) {
-                console.log(pacDirection)
                 isMouthOpen = !isMouthOpen
                 if (isMouthOpen) {
                     switch (pacDirection) {
                         case "right":
                             tile.src = images.pac2right.src
-                            case "left":
+                            break;
+                        case "left":
                             tile.src = images.pac2left.src
-                            case "up":
+                            break;
+                        case "up":
                             tile.src = images.pac2up.src
-                            case "down":
-                                tile.src=images.pac2down.src
+                            break;
+                        case "down":
+                            tile.src = images.pac2down.src
+                            break;
                     }
                     
                 } else {
                     switch (pacDirection) {
                         case "right":
                             tile.src = images.pac1right.src
-                            case "left":
+                            break;
+                        case "left":
                             tile.src = images.pac1left.src
-                            case "up":
+                            break;
+                        case "up":
                             tile.src = images.pac1up.src
-                            case "down":
-                                tile.src=images.pac1down.src
+                            break;
+                        case "down":
+                            tile.src = images.pac1down.src
+                            break;
                     }
                 }
                 tile.id = "pacman";
@@ -151,7 +158,6 @@ async function renderCanvas() {
 }
 
 async function gameOverCanvas() {
-    console.log('gameover canvas')
     main.innerHTML = "";
 
     await preloadImages();
