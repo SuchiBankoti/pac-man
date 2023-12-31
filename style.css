@@ -19,11 +19,34 @@ body{
     background-color: black;
     color: white;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap:20px;
     text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #00f, 0 0 70px #00f, 0 0 80px #00f, 0 0 100px #00f, 0 0 150px #00f;
     font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     font-size: 35px;
+}
+form{
+    display: flex;
+    flex-direction: column;
+    gap:20px;
+}
+label{
+    font-size: 16px;
+}
+#username{
+    box-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 3px #fff, 0 0 4px #fff, 0 0 7px #fff, 0 0 8px #fff, 0 0 10px #fff, 0 0 15px #fff;
+    font-size: 20px;
+    color: black;
+    height: 35px;
+}
+.errMsg{
+    box-shadow: 0 0 1px red, 0 0 2px red, 0 0 3px red, 0 0 4px red, 0 0 7px red, 0 0 8px red, 0 0 10px red, 0 0 15px red;
+    font-size: 15px;
+    color: red;
+    visibility: hidden;
+   
 }
 #main{
     display: grid;
@@ -67,15 +90,49 @@ img{
     height: 50%;
     background-color: transparent;
     color: white;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+
+}
+.overText{
     font-family: fantasy;
     letter-spacing: 2px;
     letter-spacing: 2px;
     font-size: 30px;
     font-weight: 600;
-    display: none;
-    align-items: center;
-    justify-content: center;
+}
+#scorecard{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 150px;
+  color: yellow;
 
+}
+#player{
+   font-weight: 600;
+    font-size: 25px;
+    font-family: cursive;
+}
+#points{
+    font-weight: 600;
+    font-size: 25px;
+    font-family: cursive;
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #00f, 0 0 70px #00f, 0 0 80px #00f, 0 0 100px #00f, 0 0 150px #00f;
+
+}
+#restartBtn{
+    border: 0;
+    background-color: #fff;
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #00f, 0 0 70px #00f, 0 0 80px #00f, 0 0 100px #00f, 0 0 150px #00f;
+    height: 35px;
+    width: 100px;
+    border-radius: 2px;
+    letter-spacing: 1px;
+    visibility: hidden;
 }
 #start{
     position: absolute;

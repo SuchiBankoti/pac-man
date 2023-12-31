@@ -2,12 +2,16 @@ const body=document.querySelector('body')
 const main = document.getElementById('main');
 const start = document.getElementById('start')
 const clock = document.getElementById('clock')
-const gameOver = document.createElement('div')
+const gameOver = document.getElementById('gameover')
+const scoreCard = document.getElementById('scorecard')
+const player = document.getElementById('player')
+const points=document.getElementById('points')
 const gameScore = document.getElementById('score')
-const intro=document.getElementById('intro')
-gameOver.id = "gameover"
-gameOver.textContent="GAME-OVER"
-body.appendChild(gameOver)
+const intro = document.getElementById('intro')
+const input = document.getElementById('username')
+const introBtn = document.getElementById('btn')
+const err = document.querySelector('.errMsg')
+const restartBtn=document.getElementById('restartBtn')
 
 let arr = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -27,6 +31,7 @@ let arr = [
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
+let username;
 main.style.gridTemplateColumns = `repeat(16 ,20px)`
 main.style.gridTemplateRows=`repeat(16,20px)`
 let pacPosition = { x: 1, y: 1 };
@@ -247,11 +252,6 @@ function handleMotion(key) {
     }
 }
 
-
-
-
-
-
 function moveGhost() {
     if ((ghostPosition.x === pacPosition.x && ghostPosition.y === pacPosition.y) ||
         (ghostHelper1Position.x === pacPosition.x && ghostHelper1Position.y === pacPosition.y) ||
@@ -339,14 +339,16 @@ function startGame() {
 }
 
 function renderGameOver() {
+    handleScore()
+    player.textContent = username
+    points.textContent = score
     gameOver.style.display = "flex"
     gameStarted=false
-    setTimeout(() => {
-        resetGame()
-    }, 2000);
+    restartBtn.style.visibility='visible'
     
 }
 function resetGame() {
+    restartBtn.style.visibility='hidden'
  overAudio.pause()
  pacPosition = { x: 1, y: 1 };
  pacDirection="right"
@@ -373,6 +375,9 @@ function resetGame() {
     startGame()
 }
 function handleEvent(e) {
+    if (e.target == input) {
+        return
+    }
     handleMotion(e.key);
     e.preventDefault();
 }
@@ -423,12 +428,56 @@ function playOnStart() {
     startAudio.play()
 }
 function removeIntro() {
-    intro.style.display = 'none'
-    startGame()
+    if (input.value) {
+        handleUser()
+        intro.style.display = 'none'
+        startGame()
+    } else {
+        err.style.visibility='visible';
+    }
+    
+}
+function handleUser() {
+    username = input.value
+    fetch('https://react-http-f5f3d-default-rtdb.asia-southeast1.firebasedatabase.app/data.json', {
+        method:"POST",
+        body:JSON.stringify( {
+            username:input.value
+        }),
+        headers: {
+            "Content-type":"application/json"
+        }
+
+    })
+        .then(res => res.json()).then(res => {
+            console.log(res.name)
+            sessionStorage.setItem('userkey',res.name)
+        }).catch(err=>console.log(err))
+}
+function handleScore() {
+    const key=sessionStorage.getItem('userkey')
+    fetch(`https://react-http-f5f3d-default-rtdb.asia-southeast1.firebasedatabase.app/data/${key}.json`, {
+        method:"PUT",
+        body:JSON.stringify( {
+            username: input.value,
+            score:score
+        }),
+        headers: {
+            "Content-type":"application/json"
+        }
+    })
+        .then(res => res.json()).then(res => {
+            console.log(res)
+        }).catch(err=>console.log(err))
 }
 gameOverCanvas()
+input.addEventListener('input', () => {
+    // e.stopPropagation()
+    err.style.visibility = 'hidden'
+})
+restartBtn.addEventListener('click',resetGame)
 document.addEventListener("keydown", handleEvent);
-intro.addEventListener("click", removeIntro)
+introBtn.addEventListener("click", removeIntro)
 document.addEventListener('touchstart', handleTouchStart, false);
 document.addEventListener('touchmove', handleTouchMove, false);
 

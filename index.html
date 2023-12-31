@@ -7,7 +7,29 @@
    <link href="style.css" rel="stylesheet"></link>
 </head>
 <body>
-    <div id="intro">Click to Start</div>
+  <div id="gameover">
+    <div class="overText">
+      GAME-OVER
+    </div>
+    <div id="scorecard">
+      <p id="player"></p>
+      <p>:</p>
+      <p id="points"></p>
+    </div>
+     <button id="restartBtn">Restart</button>
+  </div>
+    <div id="intro">
+      <div>
+        <form>
+          <label>Username</label>
+          <input id="username" type="text" />
+        </form>
+      </div>
+      <div id="btn">
+        Click to Start
+      </div>
+      <p class="errMsg">Please enter a valid username</p>
+    </div>
     <div id="start">
      <div id="timer">
         <div id="clock">5</div>
