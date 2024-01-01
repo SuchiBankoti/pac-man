@@ -134,6 +134,16 @@ img{
     letter-spacing: 1px;
     visibility: hidden;
 }
+#viewBtn{
+    border: 0;
+    background-color: #fff;
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #00f, 0 0 70px #00f, 0 0 80px #00f, 0 0 100px #00f, 0 0 150px #00f;
+    height: 35px;
+    width: 100px;
+    border-radius: 2px;
+    letter-spacing: 1px;
+    visibility: hidden;
+}
 #start{
     position: absolute;
     top: 0;
@@ -209,6 +219,54 @@ img{
 .tile{
     width: 20px;
     height: 20px;
+}
+#overlay{
+    background-color: #423131;
+    opacity: 0.5;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+    z-index: 2;
+}
+#players{
+    background-color: black;
+  width: 323px;
+  height: 323px;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch; 
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -55%);
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 3;
+  color: white;
+  align-items: center;
+  border-radius: 5px;
+}
+#player::-webkit-scrollbar{
+    width: 0;
+  display: none;
+}
+.card{
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+.playerCard{
+    background-color: rgb(173, 171, 171);
+    opacity: 0.8;
+}
+.commonCard{
+   
+    
 }
 @media only screen and (max-width: 600px) {
     .container{

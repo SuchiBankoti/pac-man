@@ -11,7 +11,10 @@ const intro = document.getElementById('intro')
 const input = document.getElementById('username')
 const introBtn = document.getElementById('btn')
 const err = document.querySelector('.errMsg')
-const restartBtn=document.getElementById('restartBtn')
+const restartBtn = document.getElementById('restartBtn')
+const viewScoresBtn = document.getElementById('viewBtn')
+const overlay = document.getElementById('overlay')
+const allPlayers=document.getElementById('players')
 
 let arr = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -240,7 +243,7 @@ function handleMotion(key) {
             if ((newPosition.y === ghostPosition.y && newPosition.x === ghostPosition.x) ||
                 (newPosition.y === ghostHelper1Position.y && newPosition.x === ghostHelper1Position.x) ||
                 (newPosition.y === ghostHelper2Position.y && newPosition.x === ghostHelper2Position.x)) {
-               playOnGameOver()
+                playOnGameOver()
                 gameOverCanvas()
                 clearInterval(intervalOut)
                 renderGameOver()
@@ -333,7 +336,7 @@ function startGame() {
             start.style.display = "none";
             renderCanvas();
             startAudio.pause()
-            intervalOut = setInterval(moveGhost, 300);
+            intervalOut = setInterval(moveGhost, 500);
         }
     }, 1000);
 }
@@ -344,11 +347,13 @@ function renderGameOver() {
     points.textContent = score
     gameOver.style.display = "flex"
     gameStarted=false
-    restartBtn.style.visibility='visible'
+    restartBtn.style.visibility = 'visible'
+    viewScoresBtn.style.visibility='visible'
     
 }
 function resetGame() {
-    restartBtn.style.visibility='hidden'
+    restartBtn.style.visibility = 'hidden'
+    viewScoresBtn.style.visibility='hidden'
  overAudio.pause()
  pacPosition = { x: 1, y: 1 };
  pacDirection="right"
@@ -470,14 +475,44 @@ function handleScore() {
             console.log(res)
         }).catch(err=>console.log(err))
 }
+function addAllPlayers(arr) {
+    const currentKey = sessionStorage.getItem('userkey')
+    allPlayers.innerHTML = ''
+    arr.forEach(e => {
+        const playerCard = document.createElement('div')
+        const name = document.createElement('p')
+        const s=document.createElement('p')
+        name.textContent = e.player
+        s.textContent=e.score
+        playerCard.className = e.key === currentKey ? 'playerCard card' : 'commonCard card'
+        playerCard.appendChild(name)
+        playerCard.appendChild(s)
+        allPlayers.appendChild(playerCard)
+    })
+    overlay.style.display='block'
+    allPlayers.style.display='flex'
+}
+function getAllScores() {
+    fetch(`https://react-http-f5f3d-default-rtdb.asia-southeast1.firebasedatabase.app/data.json`)
+        .then(res => res.json()).then(res => {
+            const keys = Object.keys(res)
+            let result = keys.map(key => ({ key: key, score: res[key].score ? res[key].score : 0, player: res[key].username }))
+            const a = result.sort((a, b) => b.score - a.score);
+            console.log(a)
+            addAllPlayers(a)
+        }).catch(err => console.log(err))
+}
+
 gameOverCanvas()
-input.addEventListener('input', () => {
-    // e.stopPropagation()
-    err.style.visibility = 'hidden'
-})
-restartBtn.addEventListener('click',resetGame)
+input.addEventListener('input', () => {err.style.visibility = 'hidden'})
+restartBtn.addEventListener('click', resetGame)
+viewScoresBtn.addEventListener('click',getAllScores)
 document.addEventListener("keydown", handleEvent);
 introBtn.addEventListener("click", removeIntro)
+overlay.addEventListener('click', () => {
+    allPlayers.style.display = 'none'
+    overlay.style.display='none'
+})
 document.addEventListener('touchstart', handleTouchStart, false);
 document.addEventListener('touchmove', handleTouchMove, false);
 
