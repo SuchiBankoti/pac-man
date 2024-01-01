@@ -51,6 +51,7 @@ let score = 0
 let gameStarted = false
 let touchStartX = null;
 let touchStartY = null;
+
 const keyAudio = new Audio('https://commondatastorage.googleapis.com/codeskulptor-demos/pyman_assets/eatpellet.ogg');
 const overAudio = new Audio('https://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/bonus.wav');
 const startAudio=new Audio('https://codeskulptor-demos.commondatastorage.googleapis.com/pang/paza-moduless.mp3')
@@ -243,9 +244,6 @@ function handleMotion(key) {
             if ((newPosition.y === ghostPosition.y && newPosition.x === ghostPosition.x) ||
                 (newPosition.y === ghostHelper1Position.y && newPosition.x === ghostHelper1Position.x) ||
                 (newPosition.y === ghostHelper2Position.y && newPosition.x === ghostHelper2Position.x)) {
-                playOnGameOver()
-                gameOverCanvas()
-                clearInterval(intervalOut)
                 renderGameOver()
                 return;
             }
@@ -256,16 +254,7 @@ function handleMotion(key) {
 }
 
 function moveGhost() {
-    if ((ghostPosition.x === pacPosition.x && ghostPosition.y === pacPosition.y) ||
-        (ghostHelper1Position.x === pacPosition.x && ghostHelper1Position.y === pacPosition.y) ||
-        (ghostHelper2Position.x === pacPosition.x && ghostHelper2Position.y === pacPosition.y) ||
-        score === 183) {
-      playOnGameOver()
-        gameOverCanvas()
-        clearInterval(intervalOut)
-        renderGameOver()
-        return;
-  }
+    
     const currentX = ghostPosition.x;
     const currentY = ghostPosition.y;
     const currentHelper1X = ghostHelper1Position.x
@@ -285,19 +274,31 @@ function moveGhost() {
     if (isValidMove(nextX, nextY)) {
         ghostPosition.x = nextX;
         ghostPosition.y = nextY;
+        if (nextX === pacPosition.x && nextY === pacPosition.y) {
+            renderGameOver()
+            return
+        }
     } else {
         currentDirection = getRandomDirection();
     }
 
     if (isValidMove(nextHelper1X, nextHelper1Y)) {
         ghostHelper1Position.x = nextHelper1X
-        ghostHelper1Position.y=nextHelper1Y
+        ghostHelper1Position.y = nextHelper1Y
+        if (nextHelper1X === pacPosition.x && nextHelper1Y === pacPosition.y) {
+            renderGameOver()
+            return
+        }
     } else {
         ghostHelper1Direction=getRandomDirection()
     }
     if (isValidMove(nextHelper2X, nextHelper2Y)) {
         ghostHelper2Position.x = nextHelper2X
-        ghostHelper2Position.y=nextHelper2Y
+        ghostHelper2Position.y = nextHelper2Y
+        if (nextHelper2X === pacPosition.x && nextHelper2Y === pacPosition.y) {
+            renderGameOver()
+            return
+        }
     } else {
         ghostHelper2Direction=getRandomDirection()
     }
@@ -342,6 +343,9 @@ function startGame() {
 }
 
 function renderGameOver() {
+    playOnGameOver()
+    gameOverCanvas()
+    clearInterval(intervalOut)
     handleScore()
     player.textContent = username
     points.textContent = score
