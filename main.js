@@ -15,7 +15,7 @@ const restartBtn = document.getElementById('restartBtn')
 const viewScoresBtn = document.getElementById('viewBtn')
 const overlay = document.getElementById('overlay')
 const allPlayers=document.getElementById('players')
-
+const allScoreCard=document.getElementById('allScoreCard')
 let arr = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -492,7 +492,7 @@ function addAllPlayers(arr) {
         allPlayers.appendChild(playerCard)
     })
     overlay.style.display='block'
-    allPlayers.style.display='flex'
+    allScoreCard.style.display='block'
 }
 function getAllScores() {
     fetch(`https://react-http-f5f3d-default-rtdb.asia-southeast1.firebasedatabase.app/data.json`)
@@ -511,7 +511,7 @@ viewScoresBtn.addEventListener('click',getAllScores)
 document.addEventListener("keydown", handleEvent);
 introBtn.addEventListener("click", removeIntro)
 overlay.addEventListener('click', () => {
-    allPlayers.style.display = 'none'
+    allScoreCard.style.display = 'none'
     overlay.style.display='none'
 })
 document.addEventListener('touchstart', handleTouchStart, false);
