@@ -51,9 +51,9 @@ let score = 0
 let gameStarted = false
 let touchStartX = null;
 let touchStartY = null;
-const keyAudio = new Audio('http://commondatastorage.googleapis.com/codeskulptor-demos/pyman_assets/eatpellet.ogg');
-const overAudio = new Audio('http://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/bonus.wav');
-const startAudio=new Audio('http://codeskulptor-demos.commondatastorage.googleapis.com/pang/paza-moduless.mp3')
+const keyAudio = new Audio('https://commondatastorage.googleapis.com/codeskulptor-demos/pyman_assets/eatpellet.ogg');
+const overAudio = new Audio('https://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/bonus.wav');
+const startAudio=new Audio('https://codeskulptor-demos.commondatastorage.googleapis.com/pang/paza-moduless.mp3')
 keyAudio.load();
 overAudio.load();
 startAudio.load();
@@ -455,7 +455,6 @@ function handleUser() {
 
     })
         .then(res => res.json()).then(res => {
-            console.log(res.name)
             sessionStorage.setItem('userkey',res.name)
         }).catch(err=>console.log(err))
 }
@@ -472,7 +471,6 @@ function handleScore() {
         }
     })
         .then(res => res.json()).then(res => {
-            console.log(res)
         }).catch(err=>console.log(err))
 }
 function addAllPlayers(arr) {
@@ -498,7 +496,6 @@ function getAllScores() {
             const keys = Object.keys(res)
             let result = keys.map(key => ({ key: key, score: res[key].score ? res[key].score : 0, player: res[key].username }))
             const a = result.sort((a, b) => b.score - a.score);
-            console.log(a)
             addAllPlayers(a)
         }).catch(err => console.log(err))
 }
